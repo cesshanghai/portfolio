@@ -1,0 +1,349 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+
+/* "dark:" utilities follow the .dark class on <html>, not the OS setting */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Design tokens: Tailwind class names -> the CSS variables further down */
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --color-page: var(--c-page);
+  --color-surface: var(--c-surface);
+  --color-surface-2: var(--c-surface-2);
+  --color-line: var(--c-line);
+  --color-ink: var(--c-ink);
+  --color-muted: var(--c-muted);
+  --color-brand: var(--c-brand);
+  --color-brand-text: var(--c-brand-text);
+  --color-link: var(--c-link);
+  --color-ok: var(--c-ok);
+  --color-claire: var(--c-claire);
+  --color-mariz: var(--c-mariz);
+  --color-mariz-solid: var(--c-mariz-solid);
+  --animate-profile-in: profile-in 0.5s ease both;
+}
+
+/* Fade-in keyframes (not used on the shared page, kept for reuse) */
+@keyframes profile-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-profile-in { animation: none; }
+}
+
+/* Native date picker icon follows the theme */
+.dark input[type='date'] { color-scheme: dark; }
+
+/* ===== Original css/styles.css (unchanged) ===== */
+/* ============================================================
+   Princess Claire Dominguez - Portfolio
+   Plain CSS that sits next to Tailwind. Three jobs:
+   1. Colour variables for the light and dark themes
+   2. Small things Tailwind utilities can't express cleanly
+   3. Accessibility helpers (focus ring, reduced motion)
+   ============================================================ */
+
+/* ---- 1. Theme colours ------------------------------------
+   Tailwind names like bg-page or text-muted point at these
+   variables (see @theme in index.html). Swapping the .dark class
+   on <html> swaps the whole palette.
+   Every text/background pair below was checked for at least 4.5:1. */
+
+/* Light theme */
+:root {
+  --c-page: #f7f7fa;
+  --c-surface: #ffffff;
+  --c-surface-2: #f0f0f5;
+  --c-line: #dcdce4;
+  --c-ink: #111218;
+  --c-muted: #55566a;
+  --c-brand: #c41240;        /* button background (white text on it = 6:1) */
+  --c-brand-text: #c41240;   /* crimson used as text/outline on light */
+  --c-link: #1f5fbf;
+  --c-ok: #15803d;
+  --c-claire: #c41240;       /* Claire's tag colour (crimson) */
+  --c-mariz: #6d3fd1;        /* Mariz's tag colour (violet) */
+  --c-mariz-solid: #6d3fd1;  /* violet button background (white text on it) */
+}
+
+/* Dark theme (the default, matches my Figma design) */
+:root.dark {
+  --c-page: #0b0c10;
+  --c-surface: #15161b;
+  --c-surface-2: #1b1c23;
+  --c-line: #262730;
+  --c-ink: #ffffff;
+  --c-muted: #a3a3b0;
+  --c-brand: #c41240;
+  --c-brand-text: #ff6b81;   /* lighter pink so it reads on dark */
+  --c-link: #8fb4e8;
+  --c-ok: #4ade80;
+  --c-claire: #ff6b81;
+  --c-mariz: #b69cff;
+  --c-mariz-solid: #6d3fd1;
+}
+
+/* ---- Glossy ID card ----------------------------------------
+   JavaScript (section 7 of main.js) sets these variables on #id-card:
+     --holo-x / --holo-y     where the reflection band sits (0% to 100%)
+     --glare-x / --glare-y   where the soft white shine spot sits
+   The CSS only reads them, so the HTML never changes. */
+
+/* The small sticker is now a plain silver disc instead of rainbow colours */
+.holo-foil {
+  background: linear-gradient(
+    115deg,
+    transparent 38%,
+    rgba(0, 0, 0, 0.025) 45%,
+    rgba(255, 255, 255, 0.28) 50%,
+    rgba(0, 0, 0, 0.02) 55%,
+    transparent 62%
+  );
+  background-size: 260% 260%;
+  background-position: var(--holo-x, 50%) var(--holo-y, 50%);
+}
+
+.holo-glare {
+  background: radial-gradient(
+    circle at var(--glare-x, 30%) var(--glare-y, 20%),
+    rgba(255, 255, 255, 0.12),
+    transparent 40%
+  );
+}
+
+/* Smooth scrolling for the nav links, only if the visitor allows motion */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* The swinging ID card is moved by JavaScript, so hint the browser */
+#lanyard {
+  will-change: transform;
+}
+
+/* ---- 3. Accessibility ------------------------------------ */
+
+/* A clear ring for keyboard users on every interactive element */
+:focus-visible {
+  outline: 3px solid var(--c-brand-text);
+  outline-offset: 3px;
+}
+
+/* Colour changes between themes should feel smooth, but not for people who asked for less motion */
+@media (prefers-reduced-motion: no-preference) {
+  body {
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+}
+
+
+/* ============================================================
+   PINK HOVER EFFECTS
+   ============================================================ */
+
+/* Technical skill cards and project cards */
+[data-skill],
+[data-project] {
+  transition:
+    box-shadow 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+[data-skill]:hover {
+  border-color: #ff4f87;
+  box-shadow:
+    0 0 12px rgba(255, 79, 135, 0.25),
+    0 0 24px rgba(255, 79, 135, 0.16);
+}
+
+[data-project]:hover {
+  border-color: #ff4f87;
+  box-shadow:
+    0 8px 24px rgba(255, 79, 135, 0.18),
+    0 0 30px rgba(255, 79, 135, 0.20);
+  transform: translateY(-5px);
+}
+
+/* Soft skill pills: the label stays inside the pill */
+#skills .soft-skill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  white-space: nowrap;
+  transition:
+    color 0.25s ease,
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+#skills .soft-skill:hover {
+  color: #ff6b9a;
+  background-color: rgba(255, 79, 135, 0.10);
+  border-color: #ff4f87;
+  box-shadow:
+    0 0 12px rgba(255, 79, 135, 0.35),
+    0 0 28px rgba(255, 79, 135, 0.20);
+}
+
+/* Keyboard accessibility */
+[data-skill]:focus-within,
+[data-project]:focus-within,
+#skills .soft-skill:focus-visible {
+  outline: 2px solid #ff4f87;
+  outline-offset: 3px;
+}
+
+/* Mariz's things glow violet instead of pink (pink is Claire's colour) */
+[data-skill][data-owner='mariz']:hover {
+  border-color: var(--c-mariz);
+  box-shadow:
+    0 0 12px rgba(139, 92, 246, 0.28),
+    0 0 24px rgba(139, 92, 246, 0.18);
+}
+
+[data-project][data-owner='mariz']:hover {
+  border-color: var(--c-mariz);
+  box-shadow:
+    0 8px 24px rgba(139, 92, 246, 0.20),
+    0 0 30px rgba(139, 92, 246, 0.22);
+}
+
+#skills .soft-skill[data-owner='mariz']:hover {
+  color: var(--c-mariz);
+  background-color: rgba(139, 92, 246, 0.10);
+  border-color: var(--c-mariz);
+  box-shadow:
+    0 0 12px rgba(139, 92, 246, 0.35),
+    0 0 28px rgba(139, 92, 246, 0.20);
+}
+
+[data-skill][data-owner='mariz']:focus-within,
+[data-project][data-owner='mariz']:focus-within,
+#skills .soft-skill[data-owner='mariz']:focus-visible {
+  outline-color: var(--c-mariz);
+}
+
+/* Gradient underline follows the width of its heading text */
+.section-heading {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.section-heading .section-underline {
+  display: block;
+  width: 100%;
+  height: 5px;
+  margin-top: 0;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    #e60046 0%,
+    #ff4f87 45%,
+    rgba(255, 79, 135, 0.35) 80%,
+    transparent 100%
+  );
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  [data-skill],
+  [data-project],
+  #skills .soft-skill {
+    transition: none;
+  }
+
+  [data-project]:hover {
+    transform: none;
+  }
+}
+
+
+/* ===== Home Statistics Cards ===== */
+
+.stat-card {
+  border: 1px solid var(--c-line);
+  background: var(--c-surface);
+  border-radius: 16px;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  border-color: #ff4f87;
+  box-shadow:
+    0 0 12px rgba(255, 79, 135, 0.22),
+    0 0 28px rgba(255, 79, 135, 0.12);
+  background-color: var(--c-surface-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stat-card {
+    transition: none;
+  }
+
+  .stat-card:hover {
+    transform: none;
+  }
+}
+
+
+/* ===== Home CTA Buttons ===== */
+
+#home .home-cta {
+  transition:
+    color 0.25s ease,
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.2s ease;
+}
+
+/* Default: neutral, no permanent pink glow */
+#home .home-cta {
+  box-shadow: none;
+}
+
+/* Pink appears only while hovering */
+#home .home-cta:hover {
+  color: #ffffff;
+  background-color: #c41240;
+  border-color: #ff4f87;
+  box-shadow: 0 5px 18px rgba(255, 79, 135, 0.25);
+}
+
+/* Click / press feedback */
+#home .home-cta:active {
+  transform: scale(0.97);
+  background-color: #a80f36;
+  box-shadow: 0 0 12px rgba(255, 79, 135, 0.35);
+}
+
+/* Keyboard accessibility */
+#home .home-cta:focus-visible {
+  outline: 2px solid #ff4f87;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #home .home-cta {
+    transition: none;
+  }
+}
