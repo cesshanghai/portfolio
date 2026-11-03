@@ -9,12 +9,20 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Login for the management pages
+        $email    = config('admin.email');
+        $password = config('admin.password');
+
+        if (! $email || ! $password) {
+            $this->command?->error('Set ADMIN_EMAIL and ADMIN_PASSWORD in your .env first, then run the seeder again.');
+            return;
+        }
+
+        // Login for the management pages (credentials come from .env)
         User::firstOrCreate(
-            ['email' => 'domiglesias@gmail.com'],
+            ['email' => $email],
             [
                 'name'              => 'Admin',
-                'password'          => bcrypt('cesszie0617'),   // key stays 'password', the value goes inside bcrypt()
+                'password'          => bcrypt($password),
                 'email_verified_at' => now(),
             ]
         );
